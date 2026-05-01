@@ -1,0 +1,90 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Pricing from '../components/Pricing';
+import ChatWidget from '../components/ChatWidget';
+import Testimonials from '../components/Testimonials';
+import About from '../components/About';
+import Contact from '../components/Contact';
+import Blog from '../components/Blog';
+import Footer from '../components/Footer';
+import { Zap, Code, Shield, Clock } from 'lucide-react';
+
+const LandingPage = () => {
+  return (
+    <div>
+      {/* Navbar */}
+      <nav style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
+        <div style={{ fontSize: '1.5rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Zap color="var(--primary-color)" fill="var(--primary-color)" /> PageBuild
+        </div>
+        
+        {/* Desktop Nav Links */}
+        <div style={{ display: 'none', gap: '2rem', alignItems: 'center', '@media (min-width: 768px)': { display: 'flex' } }}>
+          <a href="#about" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>About</a>
+          <a href="#pricing" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Pricing</a>
+          <a href="#testimonials" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Reviews</a>
+          <a href="#contact" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Contact</a>
+        </div>
+
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <Link to="/admin" className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>Admin</Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <header className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
+        <div className="animate-fade-in" style={{ display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '999px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '2rem', fontSize: '0.875rem', fontWeight: '600' }}>
+          🚀 Launch your dream project today
+        </div>
+        <h1 style={{ fontSize: '4rem', marginBottom: '1.5rem', maxWidth: '900px', margin: '0 auto 1.5rem auto' }}>
+          Any Website, Software or App in <span className="text-gradient">7 Days.</span>
+        </h1>
+        <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
+          Stop waiting months for your product. We build premium, fully functional web apps and software solutions in just one week. Guaranteed.
+        </p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <a href="#pricing" className="btn btn-primary">Start Your Project</a>
+          <a href="#about" className="btn btn-outline">Learn More</a>
+        </div>
+      </header>
+
+      {/* Features */}
+      <section className="container" style={{ padding: '4rem 1.5rem' }}>
+        <div className="dashboard-grid">
+          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px', marginBottom: '1rem', color: 'var(--primary-color)' }}>
+              <Clock size={32} />
+            </div>
+            <h3 style={{ marginBottom: '0.5rem' }}>1-Week Turnaround</h3>
+            <p style={{ color: 'var(--text-secondary)' }}>We work fast without compromising on quality.</p>
+          </div>
+          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ padding: '1rem', background: 'rgba(236, 72, 153, 0.1)', borderRadius: '12px', marginBottom: '1rem', color: 'var(--secondary-color)' }}>
+              <Code size={32} />
+            </div>
+            <h3 style={{ marginBottom: '0.5rem' }}>Full Stack Solutions</h3>
+            <p style={{ color: 'var(--text-secondary)' }}>From simple landing pages to complex SaaS platforms.</p>
+          </div>
+          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '12px', marginBottom: '1rem', color: 'var(--success)' }}>
+              <Shield size={32} />
+            </div>
+            <h3 style={{ marginBottom: '0.5rem' }}>Fully Secure & Scalable</h3>
+            <p style={{ color: 'var(--text-secondary)' }}>Built with modern technologies ready to scale.</p>
+          </div>
+        </div>
+      </section>
+
+      <About />
+      <Pricing />
+      <Testimonials />
+      <Blog />
+      <Contact />
+      <Footer />
+      
+      <ChatWidget />
+    </div>
+  );
+};
+
+export default LandingPage;
