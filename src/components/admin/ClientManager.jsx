@@ -3,15 +3,18 @@ import { useAppContext } from '../../context/AppContext';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 
 const ClientManager = () => {
-  const { clients, addClient, updateClient, deleteClient } = useAppContext();
+  const { clients, addClient, updateClient, deleteClient, pricingServices, exchangeRates } = useAppContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
+    phone: '',
     project: '',
     deadline: '',
     amount: '',
+    currency: 'INR',
     status: 'New Lead',
     payment: 'Pending'
   });
@@ -21,9 +24,12 @@ const ClientManager = () => {
       setEditingClient(client.id);
       setFormData({
         name: client.name,
-        project: client.project,
-        deadline: new Date(client.deadline).toISOString().split('T')[0],
-        amount: client.amount,
+        email: client.email || '',
+        phone: client.phone || '',
+        project: client.project || '',
+        deadline: client.deadline ? new Date(client.deadline).toISOString().split('T')[0] : '',
+        amount: client.amount || '',
+        currency: client.currency || (client.amount && client.amount.includes('$') ? 'USD' : 'INR'),
         status: client.status,
         payment: client.payment
       });
@@ -31,9 +37,12 @@ const ClientManager = () => {
       setEditingClient(null);
       setFormData({
         name: '',
+        email: '',
+        phone: '',
         project: '',
         deadline: '',
         amount: '',
+        currency: 'INR',
         status: 'New Lead',
         payment: 'Pending'
       });
@@ -60,6 +69,16 @@ const ClientManager = () => {
     if (window.confirm("Are you sure you want to delete this client?")) {
       deleteClient(id);
     }
+  };
+
+  const handleProjectChange = (e) => {
+    const selectedTitle = e.target.value;
+    const service = pricingServices.find(s => s.title === selectedTitle);
+    setFormData({
+      ...formData,
+      project: selectedTitle,
+      amount: service ? (formData.currency === 'USD' ? `$${service.priceUS}` : `₹${service.priceIN}`) : formData.amount
+    });
   };
 
   return (
@@ -95,10 +114,17 @@ const ClientManager = () => {
             <tbody>
               {clients.map(client => (
                 <tr key={client.id}>
-                  <td style={{ fontWeight: '500' }}>{client.name}</td>
-                  <td>{client.project}</td>
-                  <td>{new Date(client.deadline).toLocaleDateString()}</td>
-                  <td style={{ fontWeight: '600' }}>{client.amount}</td>
+                  <td style={{ fontWeight: '500' }}>
+                    {client.name}
+                    {(client.email || client.phone) && (
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 'normal', marginTop: '0.2rem' }}>
+                        {client.email} {client.email && client.phone ? ' | ' : ''} {client.phone}
+                      </div>
+                    )}
+                  </td>
+                  <td>{client.project || '-'}</td>
+                  <td>{client.deadline ? new Date(client.deadline).toLocaleDateString() : '-'}</td>
+                  <td style={{ fontWeight: '600' }}>{client.amount || '-'}</td>
                   <td>
                     <span className={`badge ${client.status === 'In Progress' ? 'warning' : client.status === 'New Lead' ? 'primary' : 'success'}`}>
                       {client.status}
@@ -139,26 +165,72 @@ const ClientManager = () => {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Client Name</label>
-                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '8px' }} />
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }} />
               </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Project Type</label>
-                <input required type="text" value={formData.project} onChange={e => setFormData({...formData, project: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '8px' }} />
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Email (Optional)</label>
+                  <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Phone (Optional)</label>
+                  <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Project Type</label>
+                  <select value={formData.project} onChange={handleProjectChange} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }}>
+                    <option value="" disabled>Select a service...</option>
+                    {pricingServices.map(s => (
+                      <option key={s.id} value={s.title}>{s.title}</option>
+                    ))}
+                    <option value="Custom Project">Custom Project</option>
+                  </select>
+                </div>
+                <div style={{ width: '120px' }}>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Currency</label>
+                  <select required value={formData.currency} onChange={e => {
+                    const newCurrency = e.target.value;
+                    let newAmount = formData.amount;
+                    if (formData.project) {
+                      const srv = pricingServices.find(s => s.title === formData.project);
+                      if (srv) {
+                        // Very rough fallback if they pick a currency we don't have predefined prices for,
+                        // we could convert priceUS to their new currency, but simplest is keeping the raw USD price format for now or converting.
+                        // Let's just leave it blank for manual entry if it's not INR or USD.
+                        if (newCurrency === 'USD') newAmount = `$${srv.priceUS}`;
+                        else if (newCurrency === 'INR') newAmount = `₹${srv.priceIN}`;
+                        else newAmount = ''; 
+                      }
+                    }
+                    setFormData({...formData, currency: newCurrency, amount: newAmount});
+                  }} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }}>
+                    {exchangeRates ? Object.keys(exchangeRates).map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    )) : (
+                      <>
+                        <option value="INR">INR</option>
+                        <option value="USD">USD</option>
+                      </>
+                    )}
+                  </select>
+                </div>
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Deadline</label>
-                  <input required type="date" value={formData.deadline} onChange={e => setFormData({...formData, deadline: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '8px' }} />
+                  <input type="date" value={formData.deadline} onChange={e => setFormData({...formData, deadline: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Amount</label>
-                  <input required type="text" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} placeholder="e.g. ₹40,000 or TBD" style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '8px' }} />
+                  <input type="text" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} placeholder="e.g. ₹40,000 or TBD" style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }} />
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Status</label>
-                  <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '8px' }}>
+                  <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }}>
                     <option value="New Lead">New Lead</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Review">Review</option>
@@ -167,7 +239,7 @@ const ClientManager = () => {
                 </div>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Payment</label>
-                  <select value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '8px' }}>
+                  <select value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '8px' }}>
                     <option value="Pending">Pending</option>
                     <option value="Partial">Partial</option>
                     <option value="Paid">Paid</option>

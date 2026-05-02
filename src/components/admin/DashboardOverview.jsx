@@ -7,9 +7,11 @@ import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase';
 
 const DashboardOverview = () => {
-  const { clients, chats } = useAppContext();
+  const { clients, chats, exchangeRates } = useAppContext();
   const navigate = useNavigate();
   const [dbUsers, setDbUsers] = useState([]);
+  const [primaryCurrency, setPrimaryCurrency] = useState('INR');
+  const [secondaryCurrency, setSecondaryCurrency] = useState('USD');
   const db = getFirestore(app);
 
   useEffect(() => {
@@ -19,35 +21,65 @@ const DashboardOverview = () => {
     return () => unsubscribe();
   }, []);
 
-  // Derived metrics from actual data
-  const totalRevenue = clients.reduce((acc, client) => {
-    const val = client.amount.replace(/[^0-9]/g, '');
-    return acc + (parseInt(val) || 0);
-  }, 0);
+  // Parse amount string to get a numeric value and its currency type
+  const parseAmount = (amountStr, clientCurrency) => {
+    if (amountStr == null) return { value: 0, curr: 'INR' };
+    const str = String(amountStr);
+    const curr = clientCurrency || (str.includes('$') || str.toUpperCase().includes('USD') ? 'USD' : 'INR');
+    const cleanStr = str.replace(/,/g, '').replace(/[^0-9.]/g, '');
+    const val = parseFloat(cleanStr) || 0;
+    return { value: val, curr };
+  };
 
-  const pendingPayments = clients.reduce((acc, client) => {
-    if (client.payment === 'Pending' || client.payment === 'Partial') {
-      const val = client.amount.replace(/[^0-9]/g, '');
-      return acc + (parseInt(val) || 0);
+  // Convert parsed amount to any currency
+  const convertTo = (value, fromCurr, toCurr) => {
+    if (!exchangeRates || fromCurr === toCurr || !exchangeRates[fromCurr] || !exchangeRates[toCurr]) return value;
+    const valueInUSD = value / exchangeRates[fromCurr];
+    return valueInUSD * exchangeRates[toCurr];
+  };
+
+  const formatCurrency = (val, currCode) => {
+    try {
+      if (val == null || isNaN(val)) return '';
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: currCode }).format(val);
+    } catch(e) {
+      return `${currCode} ${Number(val || 0).toFixed(2)}`;
     }
-    return acc;
-  }, 0);
+  };
 
-  const completedRevenue = totalRevenue - pendingPayments;
+  // Calculate Revenues for Primary Currency
+  let totalRevenue1 = 0;
+  let totalRevenue2 = 0;
+  let pendingPayments1 = 0;
+  let pendingPayments2 = 0;
+
+  clients.forEach(client => {
+    const { value, curr } = parseAmount(client.amount, client.currency);
+    if (client.payment === 'Paid') {
+      totalRevenue1 += convertTo(value, curr, primaryCurrency);
+      totalRevenue2 += convertTo(value, curr, secondaryCurrency);
+    } else if (client.payment === 'Pending' || client.payment === 'Partial') {
+      pendingPayments1 += convertTo(value, curr, primaryCurrency);
+      pendingPayments2 += convertTo(value, curr, secondaryCurrency);
+    }
+  });
+
+  const completedRevenue1 = totalRevenue1;
 
   // Real data for charts (Empty if no clients, Recharts handles empty gracefully)
   // We try to group revenue by deadline month/day as a basic chart
   const revenueByDate = {};
   clients.forEach(c => {
-    if (c.deadline) {
+    if (c.deadline && c.payment === 'Paid') {
       const d = new Date(c.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       if (!revenueByDate[d]) revenueByDate[d] = 0;
-      revenueByDate[d] += parseInt(c.amount.replace(/[^0-9]/g, '') || 0);
+      const { value, curr } = parseAmount(c.amount, c.currency);
+      revenueByDate[d] += convertTo(value, curr, primaryCurrency);
     }
   });
   const revenueData = Object.keys(revenueByDate).map(key => ({
     name: key,
-    revenue: revenueByDate[key]
+    revenue: Math.round(revenueByDate[key])
   }));
 
   // Visitor data from Firebase users (grouped by creation date)
@@ -65,8 +97,8 @@ const DashboardOverview = () => {
   }));
 
   const donutData = [
-    { name: 'Completed', value: completedRevenue, color: '#10b981' },
-    { name: 'Pending', value: pendingPayments, color: '#f59e0b' }
+    { name: 'Completed', value: completedRevenue1, color: '#10b981' },
+    { name: 'Pending', value: pendingPayments1, color: '#f59e0b' }
   ].filter(d => d.value > 0);
 
   // Top Services (Derived from actual clients)
@@ -75,13 +107,16 @@ const DashboardOverview = () => {
     const proj = c.project || 'Unknown';
     if (!serviceMap[proj]) serviceMap[proj] = { name: proj, orders: 0, revenue: 0 };
     serviceMap[proj].orders += 1;
-    serviceMap[proj].revenue += parseInt(c.amount.replace(/[^0-9]/g, '') || 0);
+    if(c.payment === 'Paid') {
+      const { value, curr } = parseAmount(c.amount, c.currency);
+      serviceMap[proj].revenue += convertTo(value, curr, primaryCurrency);
+    }
   });
   const topServices = Object.values(serviceMap)
     .sort((a, b) => b.orders - a.orders)
     .map(s => ({
       ...s,
-      revenueStr: `₹${s.revenue.toLocaleString()}`,
+      revenueStr: formatCurrency(s.revenue, primaryCurrency),
       percent: clients.length > 0 ? Math.round((s.orders / clients.length) * 100) : 0
     }));
 
@@ -108,13 +143,24 @@ const DashboardOverview = () => {
           <h2 style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>Dashboard</h2>
           <p style={{ color: 'var(--text-secondary)' }}>Welcome back, Admin! Here's what's happening with your business today.</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <select 
+            value={primaryCurrency} 
+            onChange={(e) => setPrimaryCurrency(e.target.value)} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', outline: 'none' }}
+          >
+            {Object.keys(exchangeRates || { INR: 1, USD: 1 }).map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select 
+            value={secondaryCurrency} 
+            onChange={(e) => setSecondaryCurrency(e.target.value)} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)', outline: 'none' }}
+          >
+            {Object.keys(exchangeRates || { INR: 1, USD: 1 }).map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
           <div className="glass-panel" style={{ padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.875rem' }}>
-            Real-time Metrics
+            Real-time Conversions
           </div>
-          <button className="btn btn-outline" style={{ padding: '0.5rem 1rem', borderRadius: '8px' }}>
-            Export Report
-          </button>
         </div>
       </div>
 
@@ -122,8 +168,8 @@ const DashboardOverview = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
         <MetricCard title="Total Visitors" value={dbUsers.length} icon={<Users size={20} color="var(--neon-purple)" />} percent="" graphColor="var(--neon-purple)" />
         <MetricCard title="Total Clients" value={clients.length} icon={<Briefcase size={20} color="var(--neon-blue)" />} percent="" graphColor="var(--neon-blue)" />
-        <MetricCard title="Total Revenue" value={`₹${totalRevenue.toLocaleString()}`} icon={<DollarSign size={20} color="var(--success)" />} percent="" graphColor="var(--success)" />
-        <MetricCard title="Pending Payments" value={`₹${pendingPayments.toLocaleString()}`} icon={<CreditCard size={20} color="var(--warning)" />} percent="" isNegative graphColor="var(--warning)" />
+        <MetricCard title="Total Revenue" value={formatCurrency(totalRevenue1, primaryCurrency)} subValue={formatCurrency(totalRevenue2, secondaryCurrency)} icon={<DollarSign size={20} color="var(--success)" />} percent="" graphColor="var(--success)" />
+        <MetricCard title="Pending Payments" value={formatCurrency(pendingPayments1, primaryCurrency)} subValue={formatCurrency(pendingPayments2, secondaryCurrency)} icon={<CreditCard size={20} color="var(--warning)" />} percent="" isNegative graphColor="var(--warning)" />
         <MetricCard title="Conversions" value={conversions} icon={<TrendingUp size={20} color="var(--secondary-color)" />} percent="" graphColor="var(--secondary-color)" />
       </div>
 
@@ -165,8 +211,8 @@ const DashboardOverview = () => {
                 <LineChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                   <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={10} tickLine={false} axisLine={false} />
-                  <YAxis stroke="var(--text-secondary)" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => `₹${val/1000}K`} />
-                  <Tooltip contentStyle={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '8px' }} formatter={(value) => [`₹${value}`, 'Revenue']} />
+                  <YAxis stroke="var(--text-secondary)" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => formatCurrency(val, primaryCurrency)} />
+                  <Tooltip contentStyle={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'var(--text-primary)' }} formatter={(value) => [formatCurrency(value, primaryCurrency), 'Revenue']} />
                   <Line type="monotone" dataKey="revenue" stroke="var(--success)" strokeWidth={3} dot={{ r: 4, fill: 'var(--bg-color)', strokeWidth: 2 }} activeDot={{ r: 6 }} />
                 </LineChart>
               </ResponsiveContainer>
@@ -243,7 +289,7 @@ const DashboardOverview = () => {
         <div className="stat-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>Revenue Summary</h3>
           <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-            {totalRevenue === 0 ? (
+            {totalRevenue1 === 0 && pendingPayments1 === 0 ? (
               <div style={{ color: 'var(--text-secondary)' }}>No revenue yet</div>
             ) : (
               <>
@@ -254,12 +300,12 @@ const DashboardOverview = () => {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '8px' }} formatter={(value) => `₹${value}`} />
+                    <Tooltip contentStyle={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'var(--text-primary)' }} formatter={(value) => formatCurrency(value, primaryCurrency)} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div style={{ position: 'absolute', textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.2rem', fontWeight: '700' }}>₹{totalRevenue.toLocaleString()}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Total</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: '700' }}>{formatCurrency(totalRevenue1 + pendingPayments1, primaryCurrency)}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Total Acc.</div>
                 </div>
               </>
             )}
@@ -267,11 +313,11 @@ const DashboardOverview = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Circle size={10} fill="var(--success)" color="var(--success)" /> Completed</div>
-              <div style={{ fontWeight: '600' }}>₹{completedRevenue.toLocaleString()}</div>
+              <div style={{ fontWeight: '600' }}>{formatCurrency(completedRevenue1, primaryCurrency)}</div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Circle size={10} fill="var(--warning)" color="var(--warning)" /> Pending</div>
-              <div style={{ fontWeight: '600' }}>₹{pendingPayments.toLocaleString()}</div>
+              <div style={{ fontWeight: '600' }}>{formatCurrency(pendingPayments1, primaryCurrency)}</div>
             </div>
           </div>
         </div>
@@ -338,7 +384,7 @@ const DashboardOverview = () => {
             <SummaryItem icon={<Users size={16} />} color="var(--primary-color)" label="Active Projects" value={clients.filter(c => c.status !== 'Completed').length} />
             <SummaryItem icon={<Users size={16} />} color="var(--neon-blue)" label="Total Clients" value={clients.length} />
             <SummaryItem icon={<CheckCircle size={16} />} color="var(--success)" label="Total Conversions" value={conversions} />
-            <SummaryItem icon={<DollarSign size={16} />} color="var(--warning)" label="Total Revenue" value={`₹${totalRevenue.toLocaleString()}`} />
+            <SummaryItem icon={<DollarSign size={16} />} color="var(--warning)" label="Total Revenue" value={formatCurrency(totalRevenue1, primaryCurrency)} />
           </div>
         </div>
 
@@ -349,7 +395,7 @@ const DashboardOverview = () => {
 };
 
 // Sub-components for smaller pieces
-const MetricCard = ({ title, value, icon, percent, isNegative, graphColor }) => (
+const MetricCard = ({ title, value, subValue, icon, percent, isNegative, graphColor }) => (
   <div className="stat-card" style={{ padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
       <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'var(--glass-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -357,9 +403,12 @@ const MetricCard = ({ title, value, icon, percent, isNegative, graphColor }) => 
       </div>
       <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500' }}>{title}</span>
     </div>
-    <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '1rem' }}>
-      <span style={{ fontSize: '1.75rem', fontWeight: '700' }}>{value}</span>
-      {percent && <span style={{ fontSize: '0.75rem', fontWeight: '600', color: isNegative ? 'var(--danger)' : 'var(--success)' }}>{percent}</span>}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
+        <span style={{ fontSize: '1.4rem', fontWeight: '700' }}>{value}</span>
+        {percent && <span style={{ fontSize: '0.75rem', fontWeight: '600', color: isNegative ? 'var(--danger)' : 'var(--success)' }}>{percent}</span>}
+      </div>
+      {subValue && <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600' }}>{subValue}</span>}
     </div>
     {/* Decorative mini graph line */}
     <svg width="100%" height="20" viewBox="0 0 100 20" preserveAspectRatio="none" style={{ position: 'absolute', bottom: 0, left: 0, opacity: 0.5 }}>

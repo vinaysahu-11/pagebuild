@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Settings, LogOut, Zap, Briefcase, CreditCard, BarChart3, Megaphone, Layers } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Settings, LogOut, Zap, Briefcase, CreditCard, BarChart3, Megaphone, Layers, Moon, Sun } from 'lucide-react';
 import ClientManager from '../components/admin/ClientManager';
 import ChatManager from '../components/admin/ChatManager';
 import DashboardOverview from '../components/admin/DashboardOverview';
@@ -12,22 +12,37 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { clients, chats, logout } = useAppContext();
 
+  // Admin specific theme logic
+  const [adminTheme, setAdminTheme] = React.useState(() => {
+    return localStorage.getItem('adminTheme') || 'dark';
+  });
+
+  const toggleTheme = () => {
+    const newTheme = adminTheme === 'dark' ? 'light' : 'dark';
+    setAdminTheme(newTheme);
+    localStorage.setItem('adminTheme', newTheme);
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const totalRevenue = clients.reduce((acc, client) => {
-    const val = client.amount.replace(/[^0-9]/g, '');
+  const safeClients = clients || [];
+  const safeChats = chats || [];
+
+  const totalRevenue = safeClients.reduce((acc, client) => {
+    const amountStr = String(client?.amount || '');
+    const val = amountStr.replace(/[^0-9]/g, '');
     return acc + (parseInt(val) || 0);
   }, 0);
 
-  const unreadChats = chats.filter(c => c.sender === 'user').length; // Simplification
+  const unreadChats = safeChats.filter(c => c.sender === 'user').length; // Simplification
 
   return (
-    <div className="admin-layout">
+    <div className="admin-layout" data-theme={adminTheme} style={{ backgroundColor: 'var(--bg-color)', color: 'var(--text-primary)', transition: 'all 0.3s' }}>
       {/* Sidebar */}
-      <div className="admin-sidebar">
+      <div className="admin-sidebar" style={{ transition: 'all 0.3s' }}>
         <div style={{ padding: '1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.25rem', fontWeight: '800' }}>
           <Zap color="var(--primary-color)" fill="var(--primary-color)" /> PageBuild Admin
         </div>
@@ -69,9 +84,15 @@ const AdminDashboard = () => {
           </Link>
         </nav>
 
-        <button onClick={handleLogout} className="nav-item" style={{ marginTop: 'auto', color: 'var(--danger)', background: 'transparent', border: 'none', textAlign: 'left', width: '100%', fontSize: '1rem' }}>
-          <LogOut size={20} /> Logout
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
+          <button onClick={toggleTheme} className="nav-item" style={{ background: 'transparent', border: 'none', textAlign: 'left', width: '100%', fontSize: '1rem' }}>
+            {adminTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />} 
+            {adminTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button onClick={handleLogout} className="nav-item" style={{ color: 'var(--danger)', background: 'transparent', border: 'none', textAlign: 'left', width: '100%', fontSize: '1rem' }}>
+            <LogOut size={20} /> Logout
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}

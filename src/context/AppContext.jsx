@@ -24,6 +24,20 @@ export const AppProvider = ({ children }) => {
     { id: 2, text: 'Hello! We can build it in 7 days. What type of business is it?', sender: 'admin', timestamp: new Date().toISOString(), isRead: true }
   ]));
   const [clients, setClients] = useState(loadState('clients', []));
+
+  const [exchangeRates, setExchangeRates] = useState(loadState('exchangeRates', { USD: 1, INR: 83.5 }));
+
+  useEffect(() => {
+    fetch('https://api.exchangerate-api.com/v4/latest/USD')
+      .then(res => res.json())
+      .then(data => {
+        if(data && data.rates) {
+          setExchangeRates(data.rates);
+          localStorage.setItem('exchangeRates', JSON.stringify(data.rates));
+        }
+      })
+      .catch(err => console.error("Could not fetch exchange rates", err));
+  }, []);
   
   const defaultServices = [
     {
@@ -171,7 +185,8 @@ export const AppProvider = ({ children }) => {
       clients, setClients, addClient, updateClient, deleteClient,
       pricingServices, setPricingServices, addService, updateService, deleteService,
       isAuthenticated, login, logout,
-      theme, setTheme
+      theme, setTheme,
+      exchangeRates
     }}>
       {children}
     </AppContext.Provider>
