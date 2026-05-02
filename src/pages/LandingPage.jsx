@@ -60,17 +60,17 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <header className="container hero-padding" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
-        <div className="animate-fade-in" style={{ display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '999px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '2rem', fontSize: '0.875rem', fontWeight: '600' }}>
+      <header className="container hero-header">
+        <div className="animate-fade-in hero-badge">
           🚀 Launch your dream project today
         </div>
-        <h1 className="hero-title" style={{ fontSize: '4rem', marginBottom: '1.5rem', maxWidth: '900px', margin: '0 auto 1.5rem auto' }}>
+        <h1 className="hero-title">
           Any Website, Software or App in <span className="text-gradient">7 Days.</span>
         </h1>
-        <p className="hero-subtitle" style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
+        <p className="hero-subtitle">
           Stop waiting months for your product. We build premium, fully functional web apps and software solutions in just one week. Guaranteed.
         </p>
-        <div className="flex-stack-mobile" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <div className="hero-buttons">
           <a href="#pricing" className="btn btn-primary">Start Your Project</a>
           <a href="#about" className="btn btn-outline">Learn More</a>
         </div>
