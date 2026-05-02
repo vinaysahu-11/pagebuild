@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
 import ChatWidget from './ChatWidget';
 import { Check } from 'lucide-react';
@@ -13,7 +13,7 @@ const Pricing = () => {
   };
 
   // Reference to ChatWidget
-  let chatWidgetRef = null;
+  const chatWidgetRef = useRef(null);
 
   // Helper to open chat and pre-select service
   const handleStartProject = (serviceTitle) => {
@@ -109,7 +109,7 @@ const Pricing = () => {
           </div>
         ))}
       </div>
-      <ChatWidget ref={el => (chatWidgetRef = el)} />
+      <ChatWidget ref={chatWidgetRef} />
     </section>
   );
 };

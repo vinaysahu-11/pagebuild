@@ -3,6 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { Zap } from 'lucide-react';
 
 const Footer = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (e, path, isHash) => {
+    e.preventDefault();
+    if (isHash) {
+      if (window.location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const el = document.querySelector(path);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const el = document.querySelector(path);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
     <footer style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--glass-border)', paddingTop: '4rem', paddingBottom: '2rem', marginTop: '4rem' }}>
       <div className="container">
