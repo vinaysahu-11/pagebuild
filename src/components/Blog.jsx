@@ -27,13 +27,13 @@ const Blog = () => {
   ];
 
   return (
-    <section className="container" id="blog" style={{ padding: '5rem 1.5rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem' }}>
+    <section className="container section-padding" id="blog" style={{ padding: '5rem 1.5rem' }}>
+      <div className="flex-stack-mobile" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', gap: '1rem' }}>
         <div>
-          <h2 style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>Latest Insights</h2>
+          <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>Latest Insights</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Thoughts on engineering, design, and building startups.</p>
         </div>
-        <button className="btn btn-outline" style={{ display: 'none', '@media (min-width: 768px)': { display: 'flex' } }}>
+        <button className="btn btn-outline hide-on-mobile">
           View All Posts <ArrowRight size={18} />
         </button>
       </div>

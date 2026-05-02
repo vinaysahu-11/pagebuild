@@ -47,7 +47,7 @@ const LandingPage = () => {
         </div>
         
         {/* Desktop Nav Links */}
-        <div style={{ display: 'none', gap: '2rem', alignItems: 'center', '@media (min-width: 768px)': { display: 'flex' } }}>
+        <div className="hide-on-mobile" style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
           <a href="#about" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>About</a>
           <a href="#pricing" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Pricing</a>
           <a href="#testimonials" style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Reviews</a>
@@ -60,24 +60,24 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <header className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
+      <header className="container hero-padding" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
         <div className="animate-fade-in" style={{ display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '999px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '2rem', fontSize: '0.875rem', fontWeight: '600' }}>
           🚀 Launch your dream project today
         </div>
-        <h1 style={{ fontSize: '4rem', marginBottom: '1.5rem', maxWidth: '900px', margin: '0 auto 1.5rem auto' }}>
+        <h1 className="hero-title" style={{ fontSize: '4rem', marginBottom: '1.5rem', maxWidth: '900px', margin: '0 auto 1.5rem auto' }}>
           Any Website, Software or App in <span className="text-gradient">7 Days.</span>
         </h1>
-        <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
+        <p className="hero-subtitle" style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
           Stop waiting months for your product. We build premium, fully functional web apps and software solutions in just one week. Guaranteed.
         </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <div className="flex-stack-mobile" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
           <a href="#pricing" className="btn btn-primary">Start Your Project</a>
           <a href="#about" className="btn btn-outline">Learn More</a>
         </div>
       </header>
 
       {/* Features */}
-      <section className="container" style={{ padding: '4rem 1.5rem' }}>
+      <section className="container section-padding" style={{ padding: '4rem 1.5rem' }}>
         <div className="dashboard-grid">
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px', marginBottom: '1rem', color: 'var(--primary-color)' }}>

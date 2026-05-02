@@ -24,11 +24,11 @@ const Pricing = () => {
   };
 
   return (
-    <section className="container" id="pricing" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
+    <section className="container section-padding" id="pricing" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
       <div className="animate-fade-in" style={{ display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '999px', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary-color)', border: '1px solid rgba(99,102,241,0.2)', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: '600' }}>
         Transparent Pricing
       </div>
-      <h2 className="text-gradient" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Choose Your Plan</h2>
+      <h2 className="text-gradient section-title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Choose Your Plan</h2>
       <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem auto', fontSize: '1.1rem' }}>
         Premium software and web development in 7 days. See our tailored pricing for your region.
       </p>

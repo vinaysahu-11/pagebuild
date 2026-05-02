@@ -3,13 +3,13 @@ import { Target, Users, Zap } from 'lucide-react';
 
 const About = () => {
   return (
-    <section className="container" id="about" style={{ padding: '5rem 1.5rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+    <section className="container section-padding" id="about" style={{ padding: '5rem 1.5rem' }}>
+      <div className="mobile-stack-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
         <div>
           <div className="animate-fade-in" style={{ display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '999px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', border: '1px solid rgba(16, 185, 129, 0.2)', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: '600' }}>
             About Us
           </div>
-          <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem', lineHeight: 1.2 }}>We build products at <span className="text-gradient">warp speed.</span></h2>
+          <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem', lineHeight: 1.2 }}>We build products at <span className="text-gradient">warp speed.</span></h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '1.1rem', lineHeight: 1.7 }}>
             Traditional development agencies take months to deliver basic websites and charge exorbitant fees. We recognized that startups and businesses need to move fast.
           </p>

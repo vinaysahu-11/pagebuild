@@ -74,11 +74,11 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="container" id="testimonials" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
+    <section className="container section-padding" id="testimonials" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
       <div className="animate-fade-in" style={{ display: 'inline-block', padding: '0.5rem 1rem', borderRadius: '999px', background: 'rgba(236, 72, 153, 0.1)', color: 'var(--secondary-color)', border: '1px solid rgba(236, 72, 153, 0.2)', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: '600' }}>
         Client Reviews
       </div>
-      <h2 className="text-gradient" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Loved by Founders</h2>
+      <h2 className="text-gradient section-title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Loved by Founders</h2>
       <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', maxWidth: '600px', margin: '0 auto 2.5rem auto', fontSize: '1.1rem' }}>
         Don't just take our word for it. Here is what our clients have to say about our 7-day delivery.
       </p>

@@ -3,15 +3,15 @@ import { Mail, MapPin, Phone } from 'lucide-react';
 
 const Contact = () => {
   return (
-    <section className="container" id="contact" style={{ padding: '5rem 1.5rem' }}>
+    <section className="container section-padding" id="contact" style={{ padding: '5rem 1.5rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <h2 className="text-gradient" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Get in Touch</h2>
+        <h2 className="text-gradient section-title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Get in Touch</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
           Have a project in mind? We're ready to build it. Reach out to us below or use the live chat.
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
+      <div className="mobile-stack-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
         
         {/* Contact Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>

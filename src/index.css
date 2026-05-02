@@ -495,4 +495,30 @@ th {
     justify-content: space-between;
     align-items: center;
   }
+
+  /* Landing Page Utilities */
+  .hero-padding {
+    padding: 3rem 1.5rem !important;
+  }
+
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .section-padding {
+    padding: 3rem 1.5rem !important;
+  }
+
+  .flex-stack-mobile {
+    flex-direction: column !important;
+  }
+
+  .section-title {
+    font-size: 2rem !important;
+  }
 }
