@@ -2,14 +2,15 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/googlead58e2e9350099ca.html",
+      "destination": "/googlead58e2e9350099ca.html"
+    },
+    {
       "source": "/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "Accept",
-          "value": "text/html"
-        }
-      ],
       "destination": "/index.html"
     }
   ],
