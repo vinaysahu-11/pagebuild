@@ -255,13 +255,7 @@ const Testimonials = () => {
         </form>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '2rem',
-        }}
-      >
+      <div className="dashboard-grid">
         {reviews.map((review, idx) => (
           <div
             key={idx}

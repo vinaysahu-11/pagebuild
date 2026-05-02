@@ -9,15 +9,7 @@ const About = () => {
         padding: '5rem 1.5rem',
       }}
     >
-      <div
-        className="mobile-stack-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '4rem',
-          alignItems: 'center',
-        }}
-      >
+      <div className="content-grid" style={{ alignItems: 'center' }}>
         <div>
           <div
             className="animate-fade-in"

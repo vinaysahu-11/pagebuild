@@ -37,23 +37,9 @@ const Footer = () => {
       }}
     >
       <div className="container">
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '3rem',
-            marginBottom: '4rem',
-          }}
-        >
+        <div className="footer-grid">
           {}
-          <div
-            style={{
-              gridColumn: '1 / -1',
-              '@media (min-width: 768px)': {
-                gridColumn: 'span 2',
-              },
-            }}
-          >
+          <div>
             <div
               style={{
                 fontSize: '1.5rem',
@@ -72,6 +58,7 @@ const Footer = () => {
                 color: 'var(--text-secondary)',
                 marginBottom: '1.5rem',
                 maxWidth: '300px',
+                fontSize: '0.95rem',
               }}
             >
               We build premium, scalable, and fully functional web apps and
@@ -91,6 +78,7 @@ const Footer = () => {
                   color: 'var(--text-secondary)',
                   transition: 'color 0.2s',
                   fontWeight: '500',
+                  fontSize: '0.95rem',
                 }}
               >
                 Twitter
@@ -103,6 +91,7 @@ const Footer = () => {
                   color: 'var(--text-secondary)',
                   transition: 'color 0.2s',
                   fontWeight: '500',
+                  fontSize: '0.95rem',
                 }}
               >
                 LinkedIn
@@ -115,6 +104,7 @@ const Footer = () => {
                   color: 'var(--text-secondary)',
                   transition: 'color 0.2s',
                   fontWeight: '500',
+                  fontSize: '0.95rem',
                 }}
               >
                 Instagram
@@ -123,177 +113,162 @@ const Footer = () => {
           </div>
 
           {}
-          <div>
-            <h4
-              style={{
-                fontSize: '1.1rem',
-                marginBottom: '1.5rem',
-                color: 'white',
-              }}
-            >
-              Services
-            </h4>
-            <ul
-              style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-              }}
-            >
-              <li>
-                <a
-                  href="#pricing"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#pricing', true)}
-                >
-                  Landing Pages
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#pricing"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#pricing', true)}
-                >
-                  Business Websites
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#pricing"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#pricing', true)}
-                >
-                  E-commerce Stores
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#pricing"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#pricing', true)}
-                >
-                  SaaS MVP
-                </a>
-              </li>
-            </ul>
-          </div>
+          <div className="footer-links-grid">
+            <div>
+              <h4
+                style={{
+                  fontSize: '1.1rem',
+                  marginBottom: '1.5rem',
+                  color: 'white',
+                }}
+              >
+                Services
+              </h4>
+              <ul
+                style={{
+                  listStyle: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  fontSize: '0.95rem',
+                }}
+              >
+                <li>
+                  <a
+                    href="#pricing"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#pricing', true)}
+                  >
+                    Landing Pages
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#pricing', true)}
+                  >
+                    Business Websites
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#pricing', true)}
+                  >
+                    E-commerce Stores
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#pricing', true)}
+                  >
+                    SaaS MVP
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          <div>
-            <h4
-              style={{
-                fontSize: '1.1rem',
-                marginBottom: '1.5rem',
-                color: 'white',
-              }}
-            >
-              Company
-            </h4>
-            <ul
-              style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-              }}
-            >
-              <li>
-                <a
-                  href="#about"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#about', true)}
-                >
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#testimonials"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#testimonials', true)}
-                >
-                  Testimonials
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#blog"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#blog', true)}
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#contact"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '#contact', true)}
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
+            <div>
+              <h4
+                style={{
+                  fontSize: '1.1rem',
+                  marginBottom: '1.5rem',
+                  color: 'white',
+                }}
+              >
+                Company
+              </h4>
+              <ul
+                style={{
+                  listStyle: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  fontSize: '0.95rem',
+                }}
+              >
+                <li>
+                  <a
+                    href="#about"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#about', true)}
+                  >
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#testimonials"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#testimonials', true)}
+                  >
+                    Testimonials
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#blog"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#blog', true)}
+                  >
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#contact"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '#contact', true)}
+                  >
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          <div>
-            <h4
-              style={{
-                fontSize: '1.1rem',
-                marginBottom: '1.5rem',
-                color: 'white',
-              }}
-            >
-              Legal
-            </h4>
-            <ul
-              style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-              }}
-            >
-              <li>
-                <a
-                  href="/terms"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '/terms', true)}
-                >
-                  Terms & Conditions
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/privacy"
-                  style={{
-                    color: 'var(--text-secondary)',
-                  }}
-                  onClick={(e) => handleClick(e, '/privacy', true)}
-                >
-                  Privacy Policy
-                </a>
-              </li>
-            </ul>
+            <div>
+              <h4
+                style={{
+                  fontSize: '1.1rem',
+                  marginBottom: '1.5rem',
+                  color: 'white',
+                }}
+              >
+                Legal
+              </h4>
+              <ul
+                style={{
+                  listStyle: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  fontSize: '0.95rem',
+                }}
+              >
+                <li>
+                  <a
+                    href="/terms"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '/terms', true)}
+                  >
+                    Terms & Conditions
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/privacy"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '/privacy', true)}
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 

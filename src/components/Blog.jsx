@@ -72,13 +72,7 @@ const Blog = () => {
         </button>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '2rem',
-        }}
-      >
+      <div className="content-grid">
         {posts.map((post, index) => (
           <div
             key={index}
@@ -142,6 +136,7 @@ const Blog = () => {
                 </span>
               </div>
               <h3
+                className="line-clamp-2"
                 style={{
                   fontSize: '1.25rem',
                   marginBottom: '1rem',
@@ -151,6 +146,7 @@ const Blog = () => {
                 {post.title}
               </h3>
               <p
+                className="line-clamp-3"
                 style={{
                   color: 'var(--text-secondary)',
                   marginBottom: '1.5rem',

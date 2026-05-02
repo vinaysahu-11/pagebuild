@@ -37,14 +37,7 @@ const Contact = () => {
         </p>
       </div>
 
-      <div
-        className="mobile-stack-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '4rem',
-        }}
-      >
+      <div className="content-grid">
         {}
         <div
           style={{

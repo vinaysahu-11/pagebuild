@@ -100,10 +100,8 @@ const Pricing = () => {
       </div>
 
       <div
+        className="dashboard-grid"
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '2rem',
           maxWidth: '1200px',
           margin: '0 auto',
           textAlign: 'left',
