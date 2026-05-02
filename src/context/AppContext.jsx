@@ -12,16 +12,20 @@ export const AppProvider = ({ children }) => {
   };
 
   const [location, setLocation] = useState(loadState('location', 'IN'));
+  // THEME STATE
+  const [theme, setTheme] = useState(() => loadState('theme', 'dark'));
+    // Apply theme to <html> root
+    useEffect(() => {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', JSON.stringify(theme));
+    }, [theme]);
   const [chats, setChats] = useState(loadState('chats', [
     { id: 1, text: 'Hi! I need a website for my business.', sender: 'user', timestamp: new Date().toISOString(), isRead: true },
     { id: 2, text: 'Hello! We can build it in 7 days. What type of business is it?', sender: 'admin', timestamp: new Date().toISOString(), isRead: true }
   ]));
-  const [clients, setClients] = useState(loadState('clients', [
-    { id: '1', name: 'Ravi Kumar', project: 'E-commerce App', deadline: '2026-05-08', amount: '₹40,000', status: 'In Progress', payment: 'Paid' },
-    { id: '2', name: 'Sarah Jenkins', project: 'SaaS Dashboard', deadline: '2026-05-05', amount: '$1,500', status: 'Review', payment: 'Pending' }
-  ]));
+  const [clients, setClients] = useState(loadState('clients', []));
   
-  const [isAuthenticated, setIsAuthenticated] = useState(loadState('auth', false));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Save to localStorage when state changes
   useEffect(() => {
@@ -36,9 +40,6 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('clients', JSON.stringify(clients));
   }, [clients]);
 
-  useEffect(() => {
-    localStorage.setItem('auth', JSON.stringify(isAuthenticated));
-  }, [isAuthenticated]);
 
   const addChat = (text, sender) => {
     const newChat = {
@@ -49,6 +50,18 @@ export const AppProvider = ({ children }) => {
       isRead: sender === 'admin' ? false : true
     };
     setChats(prev => [...prev, newChat]);
+  };
+
+  const addClient = (clientData) => {
+    setClients(prev => [...prev, { id: Date.now().toString(), ...clientData }]);
+  };
+
+  const updateClient = (id, updatedData) => {
+    setClients(prev => prev.map(client => client.id === id ? { ...client, ...updatedData } : client));
+  };
+
+  const deleteClient = (id) => {
+    setClients(prev => prev.filter(client => client.id !== id));
   };
 
   const login = (email, password) => {
@@ -68,8 +81,9 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider value={{
       location, setLocation,
       chats, addChat,
-      clients, setClients,
-      isAuthenticated, login, logout
+      clients, setClients, addClient, updateClient, deleteClient,
+      isAuthenticated, login, logout,
+      theme, setTheme
     }}>
       {children}
     </AppContext.Provider>

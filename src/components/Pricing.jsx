@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useAppContext } from '../context/AppContext';
+import ChatWidget from './ChatWidget';
 import { Check, Rocket, Globe, ShoppingCart, Smartphone, Code, Cpu } from 'lucide-react';
 
 const Pricing = () => {
@@ -62,6 +63,17 @@ const Pricing = () => {
       features: ['Full Stack Dev', 'Admin Dashboard', 'Subscription Billing', 'Launch Ready']
     }
   ];
+
+  // Reference to ChatWidget
+  let chatWidgetRef = null;
+
+  // Helper to open chat and pre-select service
+  const handleStartProject = (serviceTitle) => {
+    // Try to open chat and set service
+    if (window && window.openChatWidget) {
+      window.openChatWidget(serviceTitle);
+    }
+  };
 
   return (
     <section className="container" id="pricing" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
@@ -136,12 +148,17 @@ const Pricing = () => {
               ))}
             </ul>
             
-            <button className={`btn ${service.popular ? 'btn-primary' : 'btn-outline'}`} style={{ width: '100%', padding: '1rem' }}>
+            <button
+              className={`btn ${service.popular ? 'btn-primary' : 'btn-outline'}`}
+              style={{ width: '100%', padding: '1rem' }}
+              onClick={() => handleStartProject(service.title)}
+            >
               Start Project
             </button>
           </div>
         ))}
       </div>
+      <ChatWidget ref={el => (chatWidgetRef = el)} />
     </section>
   );
 };

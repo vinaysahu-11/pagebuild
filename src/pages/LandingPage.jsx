@@ -1,4 +1,6 @@
 import React from 'react';
+import { useAppContext } from '../context/AppContext';
+import { Moon, Sun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Pricing from '../components/Pricing';
 import ChatWidget from '../components/ChatWidget';
@@ -10,8 +12,34 @@ import Footer from '../components/Footer';
 import { Zap, Code, Shield, Clock } from 'lucide-react';
 
 const LandingPage = () => {
+  const { theme, setTheme } = useAppContext();
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
   return (
     <div>
+      {/* Theme Toggle Floating Button */}
+      <button
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        onClick={toggleTheme}
+        style={{
+          position: 'fixed',
+          top: 24,
+          right: 24,
+          zIndex: 1000,
+          background: 'var(--glass-bg)',
+          border: '1px solid var(--glass-border)',
+          borderRadius: '50%',
+          width: 48,
+          height: 48,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+          cursor: 'pointer',
+          transition: 'background 0.2s, border 0.2s',
+        }}
+      >
+        {theme === 'dark' ? <Sun size={22} color="var(--primary-color)" /> : <Moon size={22} color="var(--primary-color)" />}
+      </button>
       {/* Navbar */}
       <nav style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
         <div style={{ fontSize: '1.5rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

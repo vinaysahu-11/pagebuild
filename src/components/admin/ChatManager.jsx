@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { Send, User } from 'lucide-react';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { app } from '../../firebase';
 
 const ChatManager = () => {
   const { chats, addChat } = useAppContext();
   const [inputText, setInputText] = useState('');
+  const [users, setUsers] = useState([]);
   const messagesEndRef = useRef(null);
+  const db = getFirestore(app);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -14,6 +18,19 @@ const ChatManager = () => {
   useEffect(() => {
     scrollToBottom();
   }, [chats]);
+
+  // Fetch real users from Firestore
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const querySnapshot = await getDocs(collection(db, 'users'));
+      const userList = [];
+      querySnapshot.forEach((doc) => {
+        userList.push(doc.data());
+      });
+      setUsers(userList);
+    };
+    fetchUsers();
+  }, []);
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -31,16 +48,20 @@ const ChatManager = () => {
           <h3 style={{ fontSize: '1.25rem' }}>Active Chats</h3>
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          {/* Mocking a single active chat for now based on context */}
-          <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)', background: 'var(--glass-bg)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-              <User size={20} />
+          {users.length === 0 && (
+            <div style={{ padding: '1.5rem', color: 'var(--text-secondary)' }}>No active users yet.</div>
+          )}
+          {users.map((user) => (
+            <div key={user.uid} style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)', background: 'var(--glass-bg)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                <User size={20} />
+              </div>
+              <div>
+                <div style={{ fontWeight: '600' }}>{user.name || 'User'}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.email}</div>
+              </div>
             </div>
-            <div>
-              <div style={{ fontWeight: '600' }}>Website Visitor</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Online Now</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 

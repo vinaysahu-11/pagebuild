@@ -15,7 +15,7 @@ const Login = () => {
     if (login(email, password)) {
       navigate('/admin');
     } else {
-      setError('Invalid email or password. Try admin@pagebuild.com / admin123');
+      setError('Invalid email or password. Please try again.');
     }
   };
 
