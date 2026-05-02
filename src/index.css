@@ -385,3 +385,114 @@ th {
 
 .badge.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
 .badge.warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+
+/* Mobile Responsive Adjustments */
+.show-on-mobile {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .show-on-mobile {
+    display: flex !important;
+  }
+
+  .show-on-mobile-block {
+    display: block !important;
+  }
+
+  .admin-sidebar {
+    display: none;
+  }
+
+  .admin-main {
+    padding: 1rem;
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .bottom-nav-item.active {
+    color: var(--primary-color);
+  }
+
+  /* Metric Cards Horizontal Scroll */
+  .mobile-scroll-container {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    gap: 1rem !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .mobile-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-scroll-container > div {
+    min-width: 260px;
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+
+  /* Stack grids vertically */
+  .mobile-stack-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Typography scale down */
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Mobile Cards for Table Replacement */
+  .mobile-client-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .mobile-client-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

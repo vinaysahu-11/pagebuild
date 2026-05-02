@@ -99,56 +99,111 @@ const ClientManager = () => {
             No clients available. When visitors sign up via chat, they will appear here.
           </div>
         ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Client Name</th>
-                <th>Project Type</th>
-                <th>Deadline</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Payment</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            <div className="hide-on-mobile">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Client Name</th>
+                    <th>Project Type</th>
+                    <th>Deadline</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clients.map(client => (
+                    <tr key={client.id}>
+                      <td style={{ fontWeight: '500' }}>
+                        {client.name}
+                        {(client.email || client.phone) && (
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 'normal', marginTop: '0.2rem' }}>
+                            {client.email} {client.email && client.phone ? ' | ' : ''} {client.phone}
+                          </div>
+                        )}
+                      </td>
+                      <td>{client.project || '-'}</td>
+                      <td>{client.deadline ? new Date(client.deadline).toLocaleDateString() : '-'}</td>
+                      <td style={{ fontWeight: '600' }}>{client.amount || '-'}</td>
+                      <td>
+                        <span className={`badge ${client.status === 'In Progress' ? 'warning' : client.status === 'New Lead' ? 'primary' : 'success'}`}>
+                          {client.status}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`badge ${client.payment === 'Paid' ? 'success' : 'warning'}`}>
+                          {client.payment}
+                        </span>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button onClick={() => handleOpenModal(client)} className="btn btn-outline" style={{ padding: '0.4rem', border: 'none', background: 'rgba(255,255,255,0.1)' }}>
+                            <Edit2 size={14} />
+                          </button>
+                          <button onClick={() => handleDelete(client.id)} className="btn btn-outline" style={{ padding: '0.4rem', border: 'none', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)' }}>
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card Layout */}
+            <div className="show-on-mobile-block" style={{ display: 'none', padding: '1rem' }}>
               {clients.map(client => (
-                <tr key={client.id}>
-                  <td style={{ fontWeight: '500' }}>
-                    {client.name}
-                    {(client.email || client.phone) && (
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 'normal', marginTop: '0.2rem' }}>
-                        {client.email} {client.email && client.phone ? ' | ' : ''} {client.phone}
-                      </div>
-                    )}
-                  </td>
-                  <td>{client.project || '-'}</td>
-                  <td>{client.deadline ? new Date(client.deadline).toLocaleDateString() : '-'}</td>
-                  <td style={{ fontWeight: '600' }}>{client.amount || '-'}</td>
-                  <td>
-                    <span className={`badge ${client.status === 'In Progress' ? 'warning' : client.status === 'New Lead' ? 'primary' : 'success'}`}>
-                      {client.status}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge ${client.payment === 'Paid' ? 'success' : 'warning'}`}>
-                      {client.payment}
-                    </span>
-                  </td>
-                  <td>
+                <div key={client.id} className="mobile-client-card">
+                  <div className="mobile-client-header">
+                    <div style={{ fontWeight: '600', fontSize: '1.1rem' }}>{client.name}</div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button onClick={() => handleOpenModal(client)} className="btn btn-outline" style={{ padding: '0.4rem', border: 'none', background: 'rgba(255,255,255,0.1)' }}>
+                      <button onClick={() => handleOpenModal(client)} className="btn btn-outline" style={{ padding: '0.4rem', border: 'none' }}>
                         <Edit2 size={14} />
                       </button>
-                      <button onClick={() => handleDelete(client.id)} className="btn btn-outline" style={{ padding: '0.4rem', border: 'none', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)' }}>
+                      <button onClick={() => handleDelete(client.id)} className="btn btn-outline" style={{ padding: '0.4rem', border: 'none', color: 'var(--danger)' }}>
                         <Trash2 size={14} />
                       </button>
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                  
+                  {(client.email || client.phone) && (
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                      {client.email} {client.email && client.phone ? ' | ' : ''} {client.phone}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem', fontSize: '0.85rem' }}>
+                    <div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>Project</div>
+                      <div>{client.project || '-'}</div>
+                    </div>
+                    <div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>Deadline</div>
+                      <div>{client.deadline ? new Date(client.deadline).toLocaleDateString() : '-'}</div>
+                    </div>
+                    <div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>Amount</div>
+                      <div style={{ fontWeight: '600' }}>{client.amount || '-'}</div>
+                    </div>
+                    <div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>Status / Payment</div>
+                      <div style={{ display: 'flex', gap: '0.25rem', marginTop: '0.2rem' }}>
+                        <span className={`badge ${client.status === 'In Progress' ? 'warning' : client.status === 'New Lead' ? 'primary' : 'success'}`} style={{ padding: '0.15rem 0.4rem', fontSize: '0.65rem' }}>
+                          {client.status}
+                        </span>
+                        <span className={`badge ${client.payment === 'Paid' ? 'success' : 'warning'}`} style={{ padding: '0.15rem 0.4rem', fontSize: '0.65rem' }}>
+                          {client.payment}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 

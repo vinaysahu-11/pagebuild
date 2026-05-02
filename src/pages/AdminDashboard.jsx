@@ -110,6 +110,29 @@ const AdminDashboard = () => {
           } />
         </Routes>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="bottom-nav show-on-mobile">
+        <Link to="/admin" className={`bottom-nav-item ${location.pathname === '/admin' ? 'active' : ''}`}>
+          <LayoutDashboard size={20} />
+          <span>Home</span>
+        </Link>
+        <Link to="/admin/clients" className={`bottom-nav-item ${location.pathname === '/admin/clients' ? 'active' : ''}`}>
+          <Users size={20} />
+          <span>Clients</span>
+        </Link>
+        <Link to="/admin/chats" className={`bottom-nav-item ${location.pathname === '/admin/chats' ? 'active' : ''}`} style={{ position: 'relative' }}>
+          <MessageSquare size={20} />
+          <span>Chats</span>
+          {unreadChats > 0 && (
+            <div style={{ position: 'absolute', top: '0', right: '10px', width: '8px', height: '8px', background: 'var(--danger)', borderRadius: '50%' }}></div>
+          )}
+        </Link>
+        <button onClick={toggleTheme} className="bottom-nav-item" style={{ background: 'transparent', border: 'none' }}>
+          {adminTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />} 
+          <span>Theme</span>
+        </button>
+      </div>
     </div>
   );
 };

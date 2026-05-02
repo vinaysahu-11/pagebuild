@@ -138,12 +138,12 @@ const DashboardOverview = () => {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', paddingBottom: '2rem' }}>
       
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="mobile-stack-grid" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>Dashboard</h2>
           <p style={{ color: 'var(--text-secondary)' }}>Welcome back, Admin! Here's what's happening with your business today.</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div className="mobile-scroll-container" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <select 
             value={primaryCurrency} 
             onChange={(e) => setPrimaryCurrency(e.target.value)} 
@@ -165,7 +165,7 @@ const DashboardOverview = () => {
       </div>
 
       {/* Top 5 Metric Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
+      <div className="mobile-scroll-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
         <MetricCard title="Total Visitors" value={dbUsers.length} icon={<Users size={20} color="var(--neon-purple)" />} percent="" graphColor="var(--neon-purple)" />
         <MetricCard title="Total Clients" value={clients.length} icon={<Briefcase size={20} color="var(--neon-blue)" />} percent="" graphColor="var(--neon-blue)" />
         <MetricCard title="Total Revenue" value={formatCurrency(totalRevenue1, primaryCurrency)} subValue={formatCurrency(totalRevenue2, secondaryCurrency)} icon={<DollarSign size={20} color="var(--success)" />} percent="" graphColor="var(--success)" />
@@ -174,7 +174,7 @@ const DashboardOverview = () => {
       </div>
 
       {/* Main Grid: Charts & Live Activity */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1.5fr', gap: '1.5rem' }}>
+      <div className="mobile-stack-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1.5fr', gap: '1.5rem' }}>
         
         {/* Visitors Chart */}
         <div className="stat-card" style={{ padding: '1.5rem' }}>
@@ -241,7 +241,7 @@ const DashboardOverview = () => {
       </div>
 
       {/* Third Row: Services, Funnel, Revenue Donut */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.5fr 1.5fr', gap: '1.5rem' }}>
+      <div className="mobile-stack-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1.5fr 1.5fr', gap: '1.5rem' }}>
         
         {/* Top Services */}
         <div className="stat-card" style={{ padding: '1.5rem' }}>
@@ -325,7 +325,7 @@ const DashboardOverview = () => {
       </div>
 
       {/* Fourth Row: Clients Table & Quick Summary */}
-      <div style={{ display: 'grid', gridTemplateColumns: '3.5fr 1.5fr', gap: '1.5rem' }}>
+      <div className="mobile-stack-grid" style={{ display: 'grid', gridTemplateColumns: '3.5fr 1.5fr', gap: '1.5rem' }}>
         
         {/* Recent Clients */}
         <div className="stat-card" style={{ padding: '1.5rem', overflow: 'hidden' }}>
