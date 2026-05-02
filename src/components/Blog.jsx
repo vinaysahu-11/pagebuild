@@ -1,15 +1,15 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 const Blog = () => {
   const posts = [
     {
-      title: 'Why Startups Need an MVP in 7 Days',
-      category: 'Startups',
-      date: 'May 10, 2026',
-      image:
-        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      excerpt:
-        "In today's fast-paced market, spending months building your first version is a death sentence. Learn why speed is the ultimate advantage.\n\nWe interviewed 12 founders who launched MVPs in under a week. Their secret? Ruthless prioritization, rapid prototyping, and a willingness to launch before feeling 'ready.' Read how they iterated based on real user feedback and secured their first paying customers within days.",
+      title: 'Small Business Ke Liye Professional Business Website Kyu Zaroori Hai?',
+      category: 'Business Guide',
+      date: 'May 3, 2026',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      excerpt: 'Agar aapka India mein ek startup ya small business hai, toh janiye ek professional business website ke benefits aur ye aapki sales kaise badha sakti hai.',
+      link: '/blog/professional-website-guide'
     },
     {
       title: 'The Future of React and Vite in 2026',
@@ -155,18 +155,33 @@ const Blog = () => {
               >
                 {post.excerpt}
               </p>
-              <a
-                href="#blog"
-                style={{
-                  color: 'var(--text-primary)',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}
-              >
-                Read More <ArrowRight size={16} />
-              </a>
+              {post.link ? (
+                <Link
+                  to={post.link}
+                  style={{
+                    color: 'var(--text-primary)',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  Read More <ArrowRight size={16} />
+                </Link>
+              ) : (
+                <a
+                  href="#blog"
+                  style={{
+                    color: 'var(--text-primary)',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  Read More <ArrowRight size={16} />
+                </a>
+              )}
             </div>
           </div>
         ))}
