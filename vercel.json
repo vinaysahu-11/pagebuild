@@ -1,18 +1,5 @@
 {
   "cleanUrls": true,
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.pagebuild.tech"
-        }
-      ],
-      "destination": "https://pagebuild.tech/$1",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/sitemap.xml",
