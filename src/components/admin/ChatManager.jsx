@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { Send, User } from 'lucide-react';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase';
 
 const ChatManager = () => {
@@ -19,17 +19,21 @@ const ChatManager = () => {
     scrollToBottom();
   }, [chats]);
 
-  // Fetch real users from Firestore
+  // Fetch real users from Firestore in real-time
   useEffect(() => {
-    const fetchUsers = async () => {
-      const querySnapshot = await getDocs(collection(db, 'users'));
+    const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
       const userList = [];
-      querySnapshot.forEach((doc) => {
+      snapshot.forEach((doc) => {
         userList.push(doc.data());
       });
+      // Sort by createdAt descending
+      userList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setUsers(userList);
-    };
-    fetchUsers();
+    }, (error) => {
+      console.error("Error fetching users: ", error);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleSend = (e) => {
