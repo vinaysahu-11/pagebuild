@@ -3,15 +3,19 @@
 
 :root,
 [data-theme="dark"] {
-  --bg-color: #050505;
-  --bg-secondary: #121212;
+  --bg-color: #0b0e14;
+  --bg-secondary: #131720;
   --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
+  --text-secondary: #8b949e;
   --primary-color: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.5);
-  --secondary-color: #ec4899;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --primary-glow: rgba(99, 102, 241, 0.4);
+  --secondary-color: #a855f7;
+  --neon-blue: #3b82f6;
+  --neon-purple: #8b5cf6;
+  --neon-green: #10b981;
+  --neon-orange: #f59e0b;
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.05);
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -115,8 +119,9 @@ a {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 2rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Layout Utilities */
@@ -329,7 +334,8 @@ a {
   padding: 1.5rem;
   background: var(--bg-secondary);
   border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .stat-card-title {

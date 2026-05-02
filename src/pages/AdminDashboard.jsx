@@ -1,8 +1,9 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Settings, LogOut, Zap } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Settings, LogOut, Zap, Briefcase, CreditCard, BarChart3, Megaphone, Layers } from 'lucide-react';
 import ClientManager from '../components/admin/ClientManager';
 import ChatManager from '../components/admin/ChatManager';
+import DashboardOverview from '../components/admin/DashboardOverview';
 import { useAppContext } from '../context/AppContext';
 
 const AdminDashboard = () => {
@@ -47,6 +48,21 @@ const AdminDashboard = () => {
               </div>
             )}
           </Link>
+          <Link to="/admin/services" className={`nav-item ${location.pathname === '/admin/services' ? 'active' : ''}`}>
+            <Briefcase size={20} /> Services
+          </Link>
+          <Link to="/admin/orders" className={`nav-item ${location.pathname === '/admin/orders' ? 'active' : ''}`}>
+            <CreditCard size={20} /> Orders & Payments
+          </Link>
+          <Link to="/admin/analytics" className={`nav-item ${location.pathname === '/admin/analytics' ? 'active' : ''}`}>
+            <BarChart3 size={20} /> Analytics
+          </Link>
+          <Link to="/admin/marketing" className={`nav-item ${location.pathname === '/admin/marketing' ? 'active' : ''}`}>
+            <Megaphone size={20} /> Marketing
+          </Link>
+          <Link to="/admin/team" className={`nav-item ${location.pathname === '/admin/team' ? 'active' : ''}`}>
+            <Layers size={20} /> Team
+          </Link>
           <Link to="/admin/settings" className={`nav-item ${location.pathname === '/admin/settings' ? 'active' : ''}`}>
             <Settings size={20} /> Settings
           </Link>
@@ -60,28 +76,7 @@ const AdminDashboard = () => {
       {/* Main Content Area */}
       <div className="admin-main">
         <Routes>
-          <Route path="/" element={
-            <div className="animate-fade-in">
-              <h2 style={{ fontSize: '2rem', marginBottom: '2rem' }}>Overview</h2>
-              <div className="dashboard-grid">
-                <div className="stat-card">
-                  <div className="stat-card-title">Active Projects</div>
-                  <div className="stat-card-value">{clients.length}</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-card-title">Pending Payments</div>
-                  <div className="stat-card-value">{clients.filter(c => c.payment === 'Pending').length}</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-card-title">Estimated Revenue</div>
-                  <div className="stat-card-value">{totalRevenue > 10000 ? `₹${totalRevenue}` : `$${totalRevenue}`}</div>
-                </div>
-              </div>
-              <div style={{ marginTop: '2rem' }}>
-                <ClientManager />
-              </div>
-            </div>
-          } />
+          <Route path="/" element={<DashboardOverview />} />
           <Route path="/clients" element={<div className="animate-fade-in"><ClientManager /></div>} />
           <Route path="/chats" element={<div className="animate-fade-in"><ChatManager /></div>} />
           <Route path="/settings" element={
