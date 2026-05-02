@@ -1,68 +1,16 @@
 import React, { useContext } from 'react';
 import { useAppContext } from '../context/AppContext';
 import ChatWidget from './ChatWidget';
-import { Check, Rocket, Globe, ShoppingCart, Smartphone, Code, Cpu } from 'lucide-react';
+import { Check } from 'lucide-react';
+import * as Icons from 'lucide-react';
 
 const Pricing = () => {
-  const { location, setLocation } = useAppContext();
+  const { location, setLocation, pricingServices } = useAppContext();
 
-  const services = [
-    {
-      id: 'landing',
-      title: 'Landing Page',
-      icon: <Rocket size={24} color="var(--primary-color)" />,
-      desc: 'High-conversion, single-page design.',
-      priceIN: '15,000',
-      priceUS: '499',
-      features: ['Custom Design', 'Mobile Responsive', 'Lead Form', '7-Day Delivery']
-    },
-    {
-      id: 'business',
-      title: 'Business Website',
-      icon: <Globe size={24} color="var(--secondary-color)" />,
-      desc: 'Professional presence (5 Pages + CMS).',
-      priceIN: '30,000',
-      priceUS: '899',
-      features: ['Up to 5 Pages', 'CMS Integration', 'SEO Optimized', '7-Day Delivery']
-    },
-    {
-      id: 'ecommerce',
-      title: 'E-commerce Store',
-      icon: <ShoppingCart size={24} color="var(--success)" />,
-      desc: 'Full online store to sell products.',
-      priceIN: '60,000',
-      priceUS: '1,499',
-      features: ['Shopify/WooCommerce', 'Payment Gateway', 'Product Catalog', '7-Day Delivery'],
-      popular: true
-    },
-    {
-      id: 'mobile',
-      title: 'Mobile App',
-      icon: <Smartphone size={24} color="var(--warning)" />,
-      desc: 'Native-feel iOS & Android apps.',
-      priceIN: '1,50,000',
-      priceUS: '2,499',
-      features: ['Cross-platform', 'App Store Setup', 'API Integration', 'Fast Turnaround']
-    },
-    {
-      id: 'customweb',
-      title: 'Custom Web App',
-      icon: <Code size={24} color="#8b5cf6" />,
-      desc: 'Complex web applications & portals.',
-      priceIN: '2,00,000',
-      priceUS: '4,999',
-      features: ['Custom Logic', 'User Authentication', 'Database Setup', 'Scalable Architecture']
-    },
-    {
-      id: 'saas',
-      title: 'SaaS MVP',
-      icon: <Cpu size={24} color="#f43f5e" />,
-      desc: 'Launch your startup idea fast.',
-      priceIN: '4,00,000',
-      priceUS: '9,999',
-      features: ['Full Stack Dev', 'Admin Dashboard', 'Subscription Billing', 'Launch Ready']
-    }
-  ];
+  const renderIcon = (name, color) => {
+    const IconComponent = Icons[name] || Icons.HelpCircle;
+    return <IconComponent size={24} color={color} />;
+  };
 
   // Reference to ChatWidget
   let chatWidgetRef = null;
@@ -105,7 +53,10 @@ const Pricing = () => {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', maxWidth: '1200px', margin: '0 auto', textAlign: 'left' }}>
-        {services.map((service, index) => (
+        {pricingServices.length === 0 && (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'var(--text-secondary)' }}>No services available right now.</div>
+        )}
+        {pricingServices.map((service, index) => (
           <div key={service.id} className="glass-panel animate-fade-in" style={{ 
             animationDelay: `${index * 0.1}s`, 
             display: 'flex', 
@@ -121,7 +72,7 @@ const Pricing = () => {
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
               <div style={{ padding: '0.75rem', background: 'var(--glass-bg)', borderRadius: '12px' }}>
-                {service.icon}
+                {renderIcon(service.iconName, service.iconColor)}
               </div>
               <h3 style={{ fontSize: '1.4rem' }}>{service.title}</h3>
             </div>

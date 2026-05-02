@@ -4,6 +4,7 @@ import { LayoutDashboard, MessageSquare, Users, Settings, LogOut, Zap, Briefcase
 import ClientManager from '../components/admin/ClientManager';
 import ChatManager from '../components/admin/ChatManager';
 import DashboardOverview from '../components/admin/DashboardOverview';
+import ServiceManager from '../components/admin/ServiceManager';
 import { useAppContext } from '../context/AppContext';
 
 const AdminDashboard = () => {
@@ -78,6 +79,7 @@ const AdminDashboard = () => {
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
           <Route path="/clients" element={<div className="animate-fade-in"><ClientManager /></div>} />
+          <Route path="/services" element={<div className="animate-fade-in"><ServiceManager /></div>} />
           <Route path="/chats" element={<div className="animate-fade-in"><ChatManager /></div>} />
           <Route path="/settings" element={
             <div className="animate-fade-in glass-panel">
