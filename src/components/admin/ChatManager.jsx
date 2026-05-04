@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
-import { Send, User } from 'lucide-react';
+import { Send, User, CreditCard, X } from 'lucide-react';
 import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase';
 const ChatManager = () => {
   const { chats, addChat } = useAppContext();
   const [inputText, setInputText] = useState('');
   const [users, setUsers] = useState([]);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentService, setPaymentService] = useState('');
+  const [paymentCurrency, setPaymentCurrency] = useState('INR');
   const messagesEndRef = useRef(null);
   const db = getFirestore(app);
   const scrollToBottom = () => {
@@ -41,6 +45,23 @@ const ChatManager = () => {
       setInputText('');
     }
   };
+
+  const handleSendPaymentRequest = (e) => {
+    e.preventDefault();
+    if (paymentAmount && paymentService) {
+      addChat(`Payment Request: ${paymentCurrency} ${paymentAmount} for ${paymentService}`, 'admin', 'payment_request', {
+        amount: parseFloat(paymentAmount),
+        currency: paymentCurrency,
+        service: paymentService,
+        status: 'pending',
+        paymentId: 'mock_payment_' + Date.now(), // Generate a unique ID for the frontend tracking
+      });
+      setShowPaymentForm(false);
+      setPaymentAmount('');
+      setPaymentService('');
+    }
+  };
+
   return (
     <div
       style={{
@@ -154,32 +175,54 @@ const ChatManager = () => {
             borderBottom: '1px solid var(--glass-border)',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between',
             gap: '1rem',
           }}
         >
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: 'var(--primary-color)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-            }}
-          >
-            <User size={20} />
-          </div>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div
               style={{
-                fontWeight: '600',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: 'var(--primary-color)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
               }}
             >
-              Website Visitor
+              <User size={20} />
+            </div>
+            <div>
+              <div
+                style={{
+                  fontWeight: '600',
+                }}
+              >
+                Website Visitor
+              </div>
             </div>
           </div>
+          
+          <button
+            onClick={() => setShowPaymentForm(!showPaymentForm)}
+            className="btn"
+            style={{
+              background: 'var(--success)',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            {showPaymentForm ? <X size={18} /> : <CreditCard size={18} />}
+            {showPaymentForm ? 'Cancel' : 'Request Payment'}
+          </button>
         </div>
 
         <div
@@ -203,18 +246,42 @@ const ChatManager = () => {
                 borderRadius: '12px',
                 alignSelf: chat.sender === 'admin' ? 'flex-end' : 'flex-start',
                 background:
+                  chat.type === 'payment_request' ? 'var(--glass-bg)' :
                   chat.sender === 'admin'
                     ? 'var(--primary-color)'
                     : 'var(--glass-bg)',
                 color:
+                  chat.type === 'payment_request' ? 'var(--text-primary)' :
                   chat.sender === 'admin' ? 'white' : 'var(--text-primary)',
                 border:
+                  chat.type === 'payment_request' ? '2px solid var(--success)' :
                   chat.sender === 'admin'
                     ? 'none'
                     : '1px solid var(--glass-border)',
               }}
             >
-              {chat.text}
+              {chat.type === 'payment_request' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <strong>Payment Request</strong>
+                  <span>{chat.service}</span>
+                  <h3 style={{ margin: '0.5rem 0', color: 'var(--success)' }}>
+                    {chat.currency === 'INR' ? '₹' : '$'}{chat.amount}
+                  </h3>
+                  <div style={{
+                    padding: '0.25rem 0.5rem',
+                    background: chat.status === 'success' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(234, 179, 8, 0.2)',
+                    color: chat.status === 'success' ? '#4ade80' : '#facc15',
+                    borderRadius: '4px',
+                    fontSize: '0.8rem',
+                    textAlign: 'center',
+                    fontWeight: 'bold'
+                  }}>
+                    {chat.status === 'success' ? 'PAID' : 'PENDING'}
+                  </div>
+                </div>
+              ) : (
+                chat.text
+              )}
               <div
                 style={{
                   fontSize: '0.75rem',
@@ -232,6 +299,82 @@ const ChatManager = () => {
           ))}
           <div ref={messagesEndRef} />
         </div>
+
+        {showPaymentForm && (
+          <form 
+            onSubmit={handleSendPaymentRequest}
+            style={{
+              padding: '1.5rem',
+              borderTop: '1px solid var(--glass-border)',
+              background: 'rgba(0,0,0,0.1)',
+              display: 'flex',
+              gap: '1rem',
+              alignItems: 'center'
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Service Name"
+              value={paymentService}
+              onChange={(e) => setPaymentService(e.target.value)}
+              required
+              style={{
+                flex: 2,
+                background: 'rgba(0,0,0,0.2)',
+                border: '1px solid var(--glass-border)',
+                color: 'white',
+                padding: '0.75rem',
+                borderRadius: '8px',
+                outline: 'none',
+              }}
+            />
+            <select
+              value={paymentCurrency}
+              onChange={(e) => setPaymentCurrency(e.target.value)}
+              style={{
+                background: 'rgba(0,0,0,0.2)',
+                border: '1px solid var(--glass-border)',
+                color: 'white',
+                padding: '0.75rem',
+                borderRadius: '8px',
+                outline: 'none',
+              }}
+            >
+              <option value="INR">INR (₹)</option>
+              <option value="USD">USD ($)</option>
+            </select>
+            <input
+              type="number"
+              placeholder="Amount"
+              value={paymentAmount}
+              onChange={(e) => setPaymentAmount(e.target.value)}
+              required
+              style={{
+                flex: 1,
+                background: 'rgba(0,0,0,0.2)',
+                border: '1px solid var(--glass-border)',
+                color: 'white',
+                padding: '0.75rem',
+                borderRadius: '8px',
+                outline: 'none',
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: 'var(--success)',
+                color: 'white',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '8px',
+                border: 'none',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}
+            >
+              Send Request
+            </button>
+          </form>
+        )}
 
         <form
           onSubmit={handleSend}

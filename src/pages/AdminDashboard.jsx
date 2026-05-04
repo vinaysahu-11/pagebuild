@@ -25,6 +25,7 @@ import ClientManager from '../components/admin/ClientManager';
 import ChatManager from '../components/admin/ChatManager';
 import DashboardOverview from '../components/admin/DashboardOverview';
 import ServiceManager from '../components/admin/ServiceManager';
+import PaymentManager from '../components/admin/PaymentManager';
 import { useAppContext } from '../context/AppContext';
 const AdminDashboard = () => {
   const location = useLocation();
@@ -235,6 +236,14 @@ const AdminDashboard = () => {
             element={
               <div className="animate-fade-in">
                 <ChatManager />
+              </div>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <div className="animate-fade-in">
+                <PaymentManager />
               </div>
             }
           />

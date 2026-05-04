@@ -1,7 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
+
 const AppContext = createContext();
+
 export const useAppContext = () => useContext(AppContext);
+
 export const AppProvider = ({ children }) => {
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000'); // Connect to backend
+    setSocket(newSocket);
+
+    return () => newSocket.close();
+  }, []);
+
   const loadState = (key, defaultValue) => {
     const saved = localStorage.getItem(key);
     return saved ? JSON.parse(saved) : defaultValue;
@@ -162,11 +175,34 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('pricingServices', JSON.stringify(pricingServices));
   }, [pricingServices]);
-  const addChat = (text, sender) => {
+  useEffect(() => {
+    if (!socket) return;
+    
+    const handlePaymentSuccess = (data) => {
+      // Find the chat message containing the payment request and update its status
+      setChats((prev) => 
+        prev.map((chat) => 
+          chat.type === 'payment_request' && chat.paymentId === data.paymentId
+            ? { ...chat, status: 'success' }
+            : chat
+        )
+      );
+    };
+
+    socket.on('payment_success', handlePaymentSuccess);
+
+    return () => {
+      socket.off('payment_success', handlePaymentSuccess);
+    };
+  }, [socket]);
+
+  const addChat = (text, sender, type = 'text', additionalData = {}) => {
     const newChat = {
       id: Date.now(),
       text,
       sender,
+      type,
+      ...additionalData,
       timestamp: new Date().toISOString(),
       isRead: sender === 'admin' ? false : true,
     };
@@ -253,6 +289,7 @@ export const AppProvider = ({ children }) => {
         theme,
         setTheme,
         exchangeRates,
+        socket,
       }}
     >
       {children}
