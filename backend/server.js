@@ -44,12 +44,14 @@ io.on('connection', (socket) => {
 // Routes
 app.use('/api/payments', paymentRoutes);
 
-// Serve Static Frontend (Production Unified Build)
-app.use(express.static(path.join(__dirname, '../dist')));
 
-// Fallback Route for React Router
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+// Serve Static Frontend (Production Unified Build)
+const clientPath = path.join(__dirname, '../dist');
+app.use(express.static(clientPath));
+
+// Fallback Route for React Router (fix wildcard)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
