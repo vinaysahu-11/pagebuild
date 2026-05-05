@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
     "cors": "^2.8.6",
