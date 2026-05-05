@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'fs';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
@@ -49,9 +50,15 @@ app.use('/api/payments', paymentRoutes);
 const clientPath = path.join(__dirname, '../dist');
 app.use(express.static(clientPath));
 
+
 // Fallback Route for React Router (fix wildcard for Express 5)
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(clientPath, 'index.html'));
+  const indexPath = path.join(clientPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Frontend build not found. Please ensure "npm run build" is executed during deployment.');
+  }
 });
 
 const PORT = process.env.PORT || 5000;
