@@ -49,13 +49,19 @@ app.use('/api/payments', paymentRoutes);
 const clientPath = path.join(__dirname, '../dist');
 app.use(express.static(clientPath));
 
-// Fallback Route for React Router (fix wildcard)
-app.get('*', (req, res) => {
+// Fallback Route for React Router (fix wildcard for Express 5)
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(clientPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
 
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+});
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
+});
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
