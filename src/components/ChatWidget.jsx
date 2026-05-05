@@ -6,7 +6,7 @@ import { app } from '../firebase';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { forwardRef, useImperativeHandle } from 'react';
 
-const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '');
 
 const ChatWidget = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({

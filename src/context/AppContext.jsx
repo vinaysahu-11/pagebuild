@@ -9,7 +9,7 @@ export const AppProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const SOCKET_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
+    const SOCKET_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '');
     const newSocket = io(SOCKET_URL); // Connect to backend
     setSocket(newSocket);
 
