@@ -1,35 +1,9 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { blogPosts as posts } from '../data/blogPosts';
+
 const Blog = () => {
-  const posts = [
-    {
-      title: 'Small Business Ke Liye Professional Business Website Kyu Zaroori Hai?',
-      category: 'Business Guide',
-      date: 'May 3, 2026',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      excerpt: 'Agar aapka India mein ek startup ya small business hai, toh janiye ek professional business website ke benefits aur ye aapki sales kaise badha sakti hai.',
-      link: '/blog/professional-website-guide'
-    },
-    {
-      title: 'The Future of React and Vite in 2026',
-      category: 'Engineering',
-      date: 'May 5, 2026',
-      image:
-        'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      excerpt:
-        "How modern tooling has enabled us to build enterprise-grade applications in a fraction of the time it used to take.\n\nReact Server Components, Vite's instant HMR, and AI-powered code generation are changing the way teams ship features. We break down the latest trends, interview engineers at top startups, and share tips for staying ahead in the ever-evolving frontend landscape.",
-    },
-    {
-      title: 'Designing for Conversion: UI/UX Principles',
-      category: 'Design',
-      date: 'April 28, 2026',
-      image:
-        'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      excerpt:
-        "A beautiful website is useless if it doesn't convert. Here are the core principles we apply to every landing page we build.\n\nFrom color psychology to micro-interactions, discover actionable UI/UX strategies backed by real A/B test results. Plus, see before-and-after case studies from our recent client projects.",
-    },
-  ];
   return (
     <section
       className="container section-padding"
@@ -155,9 +129,9 @@ const Blog = () => {
               >
                 {post.excerpt}
               </p>
-              {post.link ? (
+              {post.slug ? (
                 <Link
-                  to={post.link}
+                  to={`/blog/${post.slug}`}
                   style={{
                     color: 'var(--text-primary)',
                     fontWeight: '600',

@@ -10,4 +10,34 @@
     <lastmod>2026-05-03</lastmod>
     <priority>0.8</priority>
   </url>
-</urlset>
+    <url>
+      <loc>https://pagebuild.tech/features</loc>
+      <lastmod>2026-05-05</lastmod>
+      <priority>0.9</priority>
+    </url>
+    <url>
+      <loc>https://pagebuild.tech/blog/how-to-build-saas-in-7-days</loc>
+      <lastmod>2026-05-05</lastmod>
+      <priority>0.8</priority>
+    </url>
+    <url>
+      <loc>https://pagebuild.tech/blog/best-website-builders-for-startups</loc>
+      <lastmod>2026-05-05</lastmod>
+      <priority>0.8</priority>
+    </url>
+    <url>
+      <loc>https://pagebuild.tech/blog/landing-page-vs-website-difference</loc>
+      <lastmod>2026-05-05</lastmod>
+      <priority>0.8</priority>
+    </url>
+    <url>
+      <loc>https://pagebuild.tech/blog/cost-of-building-saas-product</loc>
+      <lastmod>2026-05-05</lastmod>
+      <priority>0.8</priority>
+    </url>
+    <url>
+      <loc>https://pagebuild.tech/blog/how-to-launch-mvp-fast</loc>
+      <lastmod>2026-05-05</lastmod>
+      <priority>0.8</priority>
+    </url>
+  </urlset>

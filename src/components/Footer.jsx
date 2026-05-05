@@ -193,6 +193,15 @@ const Footer = () => {
               >
                 <li>
                   <a
+                    href="/features"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => handleClick(e, '/features', false)}
+                  >
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a
                     href="#about"
                     style={{ color: 'var(--text-secondary)' }}
                     onClick={(e) => handleClick(e, '#about', true)}
