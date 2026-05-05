@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CreditCard, Search, Filter, Trash2, CheckCircle, Clock, XCircle } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
+
 const PaymentManager = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +15,7 @@ const PaymentManager = () => {
   const fetchPayments = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/payments');
+      const res = await fetch(`${API_BASE_URL}/api/payments`);
       const data = await res.json();
       setPayments(data);
     } catch (err) {
@@ -25,7 +27,7 @@ const PaymentManager = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/payments/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/payments/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
@@ -39,7 +41,7 @@ const PaymentManager = () => {
   const deletePayment = async (id) => {
     if (!window.confirm('Are you sure you want to delete this payment record?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/payments/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/payments/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) fetchPayments();

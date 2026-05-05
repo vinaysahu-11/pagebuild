@@ -5,6 +5,11 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import paymentRoutes from './routes/paymentRoutes.js';
 import './firebaseAdmin.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -38,6 +43,14 @@ io.on('connection', (socket) => {
 
 // Routes
 app.use('/api/payments', paymentRoutes);
+
+// Serve Static Frontend (Production Unified Build)
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// Fallback Route for React Router
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 

@@ -5,6 +5,9 @@ import { getAuth, signInAnonymously } from 'firebase/auth';
 import { app } from '../firebase';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { forwardRef, useImperativeHandle } from 'react';
+
+const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
+
 const ChatWidget = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     open: (service) => {
@@ -124,7 +127,7 @@ const ChatWidget = forwardRef((props, ref) => {
       setIsProcessingPayment(true);
       
       // Step 1: Create Order
-      const res = await fetch('http://localhost:5000/api/payments/create-order', {
+      const res = await fetch(`${API_BASE_URL}/api/payments/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -147,7 +150,7 @@ const ChatWidget = forwardRef((props, ref) => {
         alert('Backend is in Mock Mode! Please add RAZORPAY_KEY_ID or PAYPAL_CLIENT_ID to your backend/.env file to see the real payment gateways.');
         // Still simulate success so they can test flow
         setTimeout(async () => {
-          await fetch(`http://localhost:5000/api/payments/webhook/${data.gateway}`, {
+          await fetch(`${API_BASE_URL}/api/payments/webhook/${data.gateway}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -306,7 +309,7 @@ const ChatWidget = forwardRef((props, ref) => {
                             createOrder: () => paypalOrder.orderId,
                             onApprove: async (data, actions) => {
                               // Manually call the paypal webhook since we are running locally without internet exposure
-                              await fetch('http://localhost:5000/api/payments/webhook/paypal', {
+                              await fetch(`${API_BASE_URL}/api/payments/webhook/paypal`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({

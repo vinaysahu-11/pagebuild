@@ -9,7 +9,8 @@ export const AppProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000'); // Connect to backend
+    const SOCKET_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
+    const newSocket = io(SOCKET_URL); // Connect to backend
     setSocket(newSocket);
 
     return () => newSocket.close();
