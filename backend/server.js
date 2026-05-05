@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import paymentRoutes from './routes/paymentRoutes.js';
+import paypalRoutes from './routes/paypalRoutes.js';
+import webhookRoutes from './routes/webhook.js';
 import './firebaseAdmin.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -43,7 +45,10 @@ io.on('connection', (socket) => {
 });
 
 // Routes
+
 app.use('/api/payments', paymentRoutes);
+app.use('/api/paypal', paypalRoutes);
+app.use('/api', webhookRoutes);
 
 
 // Serve Static Frontend (Production Unified Build)

@@ -312,11 +312,9 @@ const ChatManager = () => {
               alignItems: 'center'
             }}
           >
-            <input
-              type="text"
-              placeholder="Service Name"
+            <select
               value={paymentService}
-              onChange={(e) => setPaymentService(e.target.value)}
+              onChange={e => setPaymentService(e.target.value)}
               required
               style={{
                 flex: 2,
@@ -327,7 +325,12 @@ const ChatManager = () => {
                 borderRadius: '8px',
                 outline: 'none',
               }}
-            />
+            >
+              <option value="" disabled>Select Service</option>
+              {pricingServices.map(service => (
+                <option key={service.id} value={service.title}>{service.title}</option>
+              ))}
+            </select>
             <select
               value={paymentCurrency}
               onChange={(e) => setPaymentCurrency(e.target.value)}
