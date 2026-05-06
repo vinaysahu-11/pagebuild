@@ -64,7 +64,7 @@ const LandingPage = () => {
             gap: '0.5rem',
           }}
         >
-          <Zap color="var(--primary-color)" fill="var(--primary-color)" />{' '}
+          <img src="/logo.png" alt="PageBuild Logo" style={{ height: '32px', width: 'auto' }} />
           PageBuild
         </div>
 

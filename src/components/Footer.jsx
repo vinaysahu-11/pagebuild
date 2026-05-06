@@ -50,7 +50,7 @@ const Footer = () => {
                 marginBottom: '1rem',
               }}
             >
-              <Zap color="var(--primary-color)" fill="var(--primary-color)" />{' '}
+              <img src="/logo.png" alt="PageBuild Logo" style={{ height: '32px', width: 'auto' }} />
               PageBuild
             </div>
             <p

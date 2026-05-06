@@ -79,7 +79,7 @@ const AdminDashboard = () => {
             fontWeight: '800',
           }}
         >
-          <Zap color="var(--primary-color)" fill="var(--primary-color)" />{' '}
+          <img src="/logo.png" alt="PageBuild Logo" style={{ height: '32px', width: 'auto' }} />
           PageBuild Admin
         </div>
 
