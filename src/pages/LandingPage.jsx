@@ -65,7 +65,7 @@ const LandingPage = () => {
           }}
         >
           <img src="/logo.png" alt="PageBuild Logo" style={{ height: '32px', width: 'auto' }} />
-          PageBuild
+          PAGEBUILD
         </div>
 
         {}

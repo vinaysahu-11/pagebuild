@@ -80,7 +80,7 @@ const AdminDashboard = () => {
           }}
         >
           <img src="/logo.png" alt="PageBuild Logo" style={{ height: '32px', width: 'auto' }} />
-          PageBuild Admin
+          PAGEBUILD Admin
         </div>
 
         <nav
