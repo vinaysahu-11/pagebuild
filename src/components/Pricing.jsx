@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
-import ChatWidget from './ChatWidget';
 import { Check } from 'lucide-react';
 import * as Icons from 'lucide-react';
 const Pricing = () => {
@@ -9,7 +8,7 @@ const Pricing = () => {
     const IconComponent = Icons[name] || Icons.HelpCircle;
     return <IconComponent size={24} color={color} />;
   };
-  const chatWidgetRef = useRef(null);
+  const chatWidgetRef = null;
   const handleStartProject = (serviceTitle) => {
     if (window && window.openChatWidget) {
       window.openChatWidget(serviceTitle);
@@ -260,7 +259,7 @@ const Pricing = () => {
           </div>
         ))}
       </div>
-      <ChatWidget ref={chatWidgetRef} />
+
     </section>
   );
 };

@@ -63,6 +63,24 @@ const NewChatWidget = () => {
     return () => unsubscribe();
   }, [auth, db, widgetState]);
 
+  // Expose global function to open widget from other components
+  useEffect(() => {
+    window.openChatWidget = (serviceTitle) => {
+      if (user) {
+          if (serviceTitle) {
+              handleServiceSelect(serviceTitle);
+          } else {
+              setWidgetState(user.selectedService ? 'chat' : 'service');
+          }
+      } else {
+          setWidgetState('auth');
+      }
+    };
+    return () => {
+      delete window.openChatWidget;
+    };
+  }, [user, handleServiceSelect]);
+
   // Message listener
   useEffect(() => {
     if (user && widgetState === 'chat') {

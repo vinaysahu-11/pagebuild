@@ -8,7 +8,6 @@ import About from '../components/About';
 import Contact from '../components/Contact';
 import Blog from '../components/Blog';
 import Footer from '../components/Footer';
-import ChatWidget from '../components/ChatWidget';
 import { Zap, Code, Shield, Clock } from 'lucide-react';
 const LandingPage = () => {
   const { theme, setTheme } = useAppContext();
