@@ -39,6 +39,28 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
+
+  // Join a room based on user ID
+  socket.on('join_room', (userId) => {
+    socket.join(userId);
+    console.log(`User ${socket.id} joined room ${userId}`);
+  });
+
+  // Typing indicators
+  socket.on('typing_start', ({ userId, recipientId }) => {
+    io.to(recipientId).emit('typing_start', { userId });
+  });
+
+  socket.on('typing_stop', ({ userId, recipientId }) => {
+    io.to(recipientId).emit('typing_stop', { userId });
+  });
+
+  // Real-time message broadcasting
+  socket.on('new_message', (message) => {
+    // Assuming message contains recipientId
+    io.to(message.recipientId).emit('new_message', message);
+  });
+
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
   });

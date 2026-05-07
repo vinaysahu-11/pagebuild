@@ -3,12 +3,12 @@ import { useAppContext } from '../context/AppContext';
 import { Moon, Sun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Pricing from '../components/Pricing';
-import ChatWidget from '../components/ChatWidget';
 import Testimonials from '../components/Testimonials';
 import About from '../components/About';
 import Contact from '../components/Contact';
 import Blog from '../components/Blog';
 import Footer from '../components/Footer';
+import ChatWidget from '../components/ChatWidget';
 import { Zap, Code, Shield, Clock } from 'lucide-react';
 const LandingPage = () => {
   const { theme, setTheme } = useAppContext();
@@ -281,8 +281,6 @@ const LandingPage = () => {
       <Blog />
       <Contact />
       <Footer />
-
-      <ChatWidget />
     </div>
   );
 };

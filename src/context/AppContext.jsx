@@ -267,33 +267,23 @@ export const AppProvider = ({ children }) => {
   const logout = () => {
     setIsAuthenticated(false);
   };
-  return (
-    <AppContext.Provider
-      value={{
-        location,
-        setLocation,
-        chats,
-        addChat,
-        clients,
-        setClients,
-        addClient,
-        updateClient,
-        deleteClient,
-        pricingServices,
-        setPricingServices,
-        addService,
-        updateService,
-        deleteService,
-        isAuthenticated,
-        login,
-        logout,
-        theme,
-        setTheme,
-        exchangeRates,
-        socket,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
-  );
+  const value = {
+    theme,
+    setTheme,
+    location,
+    setLocation,
+    exchangeRates,
+    pricingServices,
+    chats,
+    setChats,
+    clients,
+    setClients,
+    socket,
+    isAuthenticated,
+    setIsAuthenticated,
+    addChat,
+    updateClient,
+  };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
